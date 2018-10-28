@@ -99,8 +99,6 @@ int main()
 	cout << "Sorted ";
 	printArray(input);
 
-
-
 	return 0 ; 
 
 }
