@@ -63,23 +63,28 @@ int avl::insertNode(node* newNode, node* headNode){
   node *temp;
   // Search for node, it it already exists return false.
   temp = searchKey(newNode->getKey(), headNode);
-  if (temp != NULL){
+  if (temp != NULL)
+  {
     cout << "Cannot insert duplicates for " << newNode->getKey() << endl;
     return false;
   }
   temp = headNode;
   // Search for the correct position where the node can be inserted.
-  while(true){
+  while(true)
+  {
     parent = temp;
     bool goLeft = temp->getKey() > newNode->getKey();
     temp = goLeft ? temp->getLeft() : temp->getRight();
-    if (temp == NULL){
-      if (goLeft){
+    if (temp == NULL)
+    {
+      if (goLeft == true)
+      {
         // Update both new node to parent and parent to new node pointers.
         parent->setLeft(newNode);
         newNode->setParent(parent);
       }
-      else{
+      else
+      {
         // Update both new node to parent and parent to new node pointers.
         parent->setRight(newNode);
         newNode->setParent(parent);
@@ -92,7 +97,8 @@ int avl::insertNode(node* newNode, node* headNode){
   return true;
 }
 
-void avl::rebalance(node* n){
+void avl::rebalance(node* n)
+{
   // Update the height of node n as well as all height of its descendants.
   updateHeights(n);
 
@@ -100,29 +106,36 @@ void avl::rebalance(node* n){
   int balance_factor = n->getRHeight() - n->getLHeight();
 
   // The four rotation cases.
-  if (balance_factor == -2){
-    if (n->getLeft()->getLHeight() >= n->getLeft()->getRHeight()){
+  if (balance_factor == -2)
+  {
+    if (n->getLeft()->getLHeight() >= n->getLeft()->getRHeight())
+    {
       n = rotateRight(n);
       cout << "Rotate Right" << endl;
     }
-    else{
+    else
+    {
       n = rotateLeftThenRight(n);
       cout << "Rotate Left Then Right" << endl;
     }
   }
-  if (balance_factor == 2){
+
+  if (balance_factor == 2)
+  {
     if (n->getRight()->getRHeight() >= n->getRight()->getLHeight()){
       n = rotateLeft(n);
       cout << "Rotate Left" << endl;
     }
-    else{
+    else
+    {
       cout << "Rotate Right Then Left" << endl;
       n = rotateRightThenLeft(n);
     }
   }
 
   // Recursively call rebalance till we reach the head node.
-  if (n->getParent() != NULL){
+  if (n->getParent() != NULL)
+  {
     rebalance(n->getParent());
   }
   else{
@@ -131,10 +144,12 @@ void avl::rebalance(node* n){
 }
 
 
-int avl::updateHeights(node *n){
+int avl::updateHeights(node *n)
+{
   // Recursively update the height of node n as well as all height of its descendants.
   int height = -1;
-  if (n != NULL){
+  if (n != NULL)
+  {
     int l_height = updateHeights(n->getLeft());
     int r_height = updateHeights(n->getRight());
     int max_height = max(l_height, r_height);
@@ -145,10 +160,12 @@ int avl::updateHeights(node *n){
   return height;
 }
 
-node* findMinNode(node* tempHead){
+node* findMinNode(node* tempHead)
+{
   node* current = tempHead;
   // Loop down to find the left most node.
-  while (current->getLeft() != NULL){
+  while (current->getLeft() != NULL)
+  {
     current = current->getLeft();
   }
   return current;
@@ -274,9 +291,81 @@ node* avl::rotateRight(node* j){
    *
    */
 
+  node *j_Parent = j->getParent();
+
+  node *k = j->getLeft();
+  node *Y = k->getRight();
+
+  if(j_Parent == NULL)
+  { 
+    k->setRight(j);
+    j->setLeft(Y);
+    j->setParent(k);
+    if(Y != NULL)
+      Y->setParent(j);
+
+    head = k;
+    k->setParent(NULL);
+    return k;
+
+  }
+
+  if(j_Parent->getLeft() == j)
+    j_Parent->setLeft(k);
+  else
+    j_Parent->setRight(k);
+
+  k->setRight(j);
+  j->setLeft(Y);
+  j->setParent(k);
+  k->setParent(j_Parent);
+  if(Y != NULL)
+    Y->setParent(j);
+
+  return k;
+
+
+
 }
 
-node* avl::rotateLeft(node* j){
+node* avl::rotateLeft(node* j)
+{
+
+
+  node *j_Parent = j->getParent();
+
+  node *k = j->getRight();
+  node *Y = k->getLeft();
+
+  if(j_Parent == NULL)
+  { 
+    k->setLeft(j);
+    j->setRight(Y); 
+    j->setParent(k);
+    if(Y != NULL)
+      Y->setParent(j);
+    k->setParent(NULL); 
+
+    head = k;
+
+    return k;
+
+  }
+
+  if(j_Parent->getLeft() == j)
+    j_Parent->setLeft(k);
+  else
+    j_Parent->setRight(k);
+
+  k->setLeft(j);
+  j->setRight(Y);
+  j->setParent(k);
+  k->setParent(j_Parent);
+  if(Y != NULL)
+    Y->setParent(j);
+
+  return k;
+
 
 }
 
