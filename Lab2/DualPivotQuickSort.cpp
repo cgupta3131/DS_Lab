@@ -99,10 +99,6 @@ Pair partition(int *data, int left, int right)
 			index1++;
 	}
 
-	/*  for(int i=left;i<=right;i++)
-		cout << data[i] << " ";
-	cout << endl;  */
-
 	index2 = left+count1+1;
 	index3 = right-count2+1;
 
@@ -126,9 +122,6 @@ Pair partition(int *data, int left, int right)
 			index2++;
 	}
 
-	/*  for(int i=left;i<=right;i++)
-		cout << data[i] << " ";
-	cout << endl;  */
 
 	return Pivot_Index;
 }
